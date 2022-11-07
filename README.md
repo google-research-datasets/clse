@@ -3,7 +3,7 @@
 ## Description
 The Corpus of Linguistically Significant Entities (CLSE) is a dataset of named entities annotated by linguist experts. It includes 34 languages and covers 74 different semantic types to support various applications from airline ticketing to video games. The aim of the corpus is to facilitate the creation of more linguistically diverse NLG datasets.
 
-For more details, see the `docs/` directory and the paper.
+For more details, see the `docs/` directory and [the paper](https://arxiv.org/abs/2211.02423).
 
 ## License
 The contents of this repository is licensed under [CC-BY](https://creativecommons.org/licenses/by/4.0/).
@@ -20,3 +20,5 @@ Make sure to cite the following paper when using this dataset:
   year={2022}
 }
 ```
+
+https://arxiv.org/abs/2211.02423
