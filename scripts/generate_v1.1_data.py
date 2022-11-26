@@ -15,8 +15,6 @@ NEW_CORPUS_PATH = "data/clse_v1.1.csv"
 
 # List of linguistic signature prefixes.
 VERBOSE_SIGNATURE_PREFIXES = [
-    "InflectedNounForm.",
-    "NominalInflectedForm.",
     "NameTags.",
     "Variant.",
     "WordStemAnnotation.",
@@ -24,42 +22,43 @@ VERBOSE_SIGNATURE_PREFIXES = [
     "SurfaceForm.",
     "Determiner.",
     "Proper",
-    "InflectedForm.",
 ]
+
+
+def get_concise_attribute(attribute_name: str) -> str:
+    """Returns a concise name of the linguistic attribute."""
+    concise_attribute_name = attribute_name
+    for prefix in VERBOSE_SIGNATURE_PREFIXES:
+        concise_attribute_name = concise_attribute_name.removeprefix(prefix)
+    return concise_attribute_name
 
 
 def get_linguistic_attribute_dict(linguistic_signature: str) -> Dict[str, str]:
     """Returns a dictionary of linguistic attribute -> value."""
-    # Strip verbose prefixes from the linguistic signature.
-    reduced_linguistic_signature = linguistic_signature
-    for verbose_signature_prefix in VERBOSE_SIGNATURE_PREFIXES:
-        reduced_linguistic_signature = reduced_linguistic_signature.replace(
-            verbose_signature_prefix, ""
-        )
-
-    # Split the signature into constituent parts.
-    attributes = reduced_linguistic_signature.split(",")
+    # Split the signature into constituent parts, where each element is an 'attribute:value' string.
+    attribute_values = linguistic_signature.split(",")
 
     # Parse attributes into a map.
     attribute_map = {}
-    for attribute in attributes:
-        if not attribute:
+    for attribute_value in attribute_values:
+        if not attribute_value:
             continue
-        components = attribute.split(":")
-        attribute_map[components[0]] = components[1]
+
+        attribute_name, value = attribute_value.split(":", 1)
+        attribute_map[get_concise_attribute(attribute_name)] = value
 
     return attribute_map
 
 
 def get_all_attributes() -> List[str]:
-    """Returns a sorted list of the superset of all linguistic attributes."""
+    """Returns a sorted list of the superset of all linguistic attributes over all languages."""
     all_attributes = set()
     with open(CORPUS_PATH) as f:
         reader = csv.DictReader(f)
         for row in reader:
             attribute_map = get_linguistic_attribute_dict(row["linguistic_signature"])
-            all_attributes.update(list(attribute_map.keys()))
-    return sorted(list(all_attributes))
+            all_attributes.update(attribute_map.keys())
+    return sorted(all_attributes)
 
 
 def main():
